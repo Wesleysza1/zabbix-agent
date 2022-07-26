@@ -61,8 +61,8 @@
         login_password: "{{ login_password }}"
         host_name: "{{ host_name }}"
         visible_name: 
-        host_groups: "{{ host_groups[0] }}"
-        link_templates: "{{ link_templates[0] }}"
+        host_groups: "{{ host_groups }}"
+        link_templates: "{{ link_templates }}"
         status: enabled
         interfaces:
           - type: 1
