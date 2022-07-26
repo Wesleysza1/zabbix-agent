@@ -53,11 +53,11 @@
     
     - name: Instalando pacote PIP
       become: true
-      shell : sudo yum  install python2-pip -y
+      shell : sudo yum  install python3-pip -y
     
     - name: instalando modulo zabbix-ansible
       become: true
-      shell: pip2 install zabbix-api
+      shell: pip3 install zabbix-api
     
     - name: Colocando a maquina no monitoramento
       local_action:

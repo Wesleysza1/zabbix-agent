@@ -52,10 +52,10 @@
     
     - name: Instalando Pip
       become: true
-      shell: apt-get install python-pip -y
+      shell: apt-get install python3-pip -y
     
     - name: instalando modulo zabbix-ansible
-      shell: pip install zabbix-api
+      shell: pip3 install zabbix-api
     
     - name: Colocando a maquina no monitoramento
       local_action:

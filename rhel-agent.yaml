@@ -52,11 +52,11 @@
     
     - name: Instalando pacote PIP
       become: true
-      shell : sudo dnf -y  install python2-pip
+      shell : sudo dnf -y  install python3-pip
     
     - name: instalando modulo zabbix-ansible
       become: true
-      shell: pip2 install zabbix-api
+      shell: pip3 install zabbix-api
     
     - name: Colocando a maquina no monitoramento
       local_action:
