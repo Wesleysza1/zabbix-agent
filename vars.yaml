@@ -6,4 +6,4 @@ login_password: zabbix
 host_name: Ansible CentOs
 host_groups: Linux servers
 link_templates: Linux by Zabbix agent
-proxy: teste_proxy
+proxy_name: teste_proxy
