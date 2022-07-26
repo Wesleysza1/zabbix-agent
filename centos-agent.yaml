@@ -70,7 +70,7 @@
         host_groups: "{{ host_groups }}"
         link_templates: "{{ link_templates }}"
         status: enabled
-        proxy: {{ proxy-name }}
+        proxy: "{{ proxy_name }}"
         interfaces:
           - type: 1
             main: 1
