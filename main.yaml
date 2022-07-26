@@ -1,6 +1,0 @@
----
-- hosts: all
-  become: true
-  tasks:
-    - name: Selecionando Agent conforme SO
-      shell: python3 zabbix_agent_install.py
