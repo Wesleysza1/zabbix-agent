@@ -1,0 +1,64 @@
+---
+- hosts: all
+  become: true
+  vars_files: vars.yaml
+  tasks:
+
+    - name: Registro de IP
+      shell: hostname -I | awk '{print $1}'
+      register: hip
+    
+    - name: Adicionando Package Zabbix
+      shell: rpm -Uvh --nosignature https://repo.zabbix.com/zabbix/5.4/sles/15/x86_64/zabbix-release-5.4-1.sles15.noarch.rpm
+      ignore_errors: yes
+
+    - name: Adicionando Key from Package Zabbix
+      shell: zypper --gpg-auto-import-keys refresh 'Zabbix Official Repository'
+    
+    - name: Atualizando pacotes
+      shell: zypper refresh
+    
+    - name: Instalando Zabbix-agent
+      become: true
+      shell: zypper install -y zabbix-agent
+    
+    - name: Configurando Agent
+      become: true
+      shell: sed -i.bkp '117c\Server={{ server }}' /etc/zabbix/zabbix_agentd.conf; sudo sed -i.bkp '158c\ServerActive={{ serverActive }}' /etc/zabbix/zabbix_agentd.conf
+    
+    - name: Configurando Firewall
+      shell: systemctl start firewalld; firewall-cmd --permanent --add-port=10050/tcp; firewall-cmd --reload
+    
+    - name: Habilitando Zabbix-agent
+      become: true
+      shell: sudo systemctl enable zabbix-agent
+    
+    - name: Stop Zabbix-agent
+      become: true
+      shell: sudo systemctl restart zabbix-agent
+    
+    - name: Instalando Python e Pip
+      become: true
+      shell: zypper install -y python3 python3-pip
+    
+    - name: instalando modulo zabbix-ansible
+      shell: pip install zabbix-api
+    
+    - name: Colocando a maquina no monitoramento
+      local_action:
+        module: zabbix_host
+        server_url: "{{ urlserver }}"
+        login_user: "{{ login_user }}"
+        login_password: "{{ login_password }}"
+        host_name: "{{ host_name }}"
+        visible_name: 
+        host_groups: "{{ host_groups[*] }}"
+        link_templates: "{{ link_templates[*] }}"
+        status: enabled
+        interfaces:
+          - type: 1
+            main: 1
+            useip: 1
+            ip: "{{ hip.stdout }}"
+            dns: ""
+            port: 10050

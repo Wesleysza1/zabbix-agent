@@ -1,0 +1,78 @@
+---
+- hosts: all
+  become: true
+  vars_files: vars.yaml
+  tasks:
+    - name: Registro de IP
+      shell: hostname -I | awk '{print $1}'
+      register: hip
+    
+    - name: Instalando Zabbix 6.0
+      become: true
+      shell: sudo rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/$(rpm -E %{rhel})/x86_64/zabbix-release-6.0-1.el$(rpm -E %{rhel}).noarch.rpm
+    
+    - name: Instalando Zabbix Agent
+      shell: sudo yum -y install zabbix-agent
+    
+    - name: Configuranto arquivo de conexao
+      become: true
+      shell: sed -i.bkp '117c\Server={{ server }}' /etc/zabbix/zabbix_agentd.conf; sudo sed -i.bkp '158c\ServerActive={{ serverActive }}' /etc/zabbix/zabbix_agentd.conf
+    
+    - name: Instalando Firewalld
+      become: true
+      shell: sudo yum install firewalld -y
+    
+    - name: Start Firewalld
+      become: true
+      shell: sudo systemctl start firewalld
+    
+    - name: Enable Firewalld
+      become: true
+      shell: sudo systemctl enable firewalld
+    
+    - name: Configurando Firewall
+      become: true
+      shell: sudo firewall-cmd --permanent --zone=public --add-port=10050/tcp
+    
+    - name: Reaload Firewall
+      become: true
+      shell: sudo  firewall-cmd --reload
+    
+    - name: Stop Zabbix-agent
+      become: true
+      shell: sudo systemctl stop zabbix-agent
+    
+    - name: Start Zabbix-agent
+      become: true
+      shell: sudo systemctl start zabbix-agent
+    
+    - name: Habilitando Zabbix-agent
+      become: true
+      shell: sudo systemctl enable zabbix-agent
+    
+    - name: Instalando pacote PIP
+      become: true
+      shell : sudo dnf -y  install python2-pip
+    
+    - name: instalando modulo zabbix-ansible
+      become: true
+      shell: pip2 install zabbix-api
+    
+    - name: Colocando a maquina no monitoramento
+      local_action:
+        module: zabbix_host
+        server_url: "{{ urlserver }}"
+        login_user: "{{ login_user }}"
+        login_password: "{{ login_password }}"
+        host_name: "{{ host_name }}"
+        visible_name: 
+        host_groups: "{{ host_groups[*] }}"
+        link_templates: "{{ link_templates[*] }}"
+        status: enabled
+        interfaces:
+          - type: 1
+            main: 1
+            useip: 1
+            ip: "{{ hip.stdout }}"
+            dns: ""
+            port: 10050

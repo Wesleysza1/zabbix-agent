@@ -1,0 +1,77 @@
+---
+- hosts: all
+  become: true
+  vars_file: vars.yaml
+  tasks:
+    - name: Registro de IP
+      shell: hostname -I | awk '{print $1}'
+      register: hip
+    
+    - name: Instalando Zabbix 6.0
+      become: true
+      shell: sudo wget https://repo.zabbix.com/zabbix/6.0/debian/pool/main/z/zabbix-release/zabbix-release_6.0-1+debian$(cut -d"." -f1 /etc/debian_version)_all.deb
+    
+    - name: Zabbix Release 6.0
+      become: true
+      shell: sudo dpkg -i zabbix-release_6.0-1+debian$(cut -d"." -f1 /etc/debian_version)_all.deb
+    
+    - name: Instalando Zabbix Agent
+      shell: sudo apt -y install zabbix-agent
+    
+    - name: Configuranto arquivo de conexao
+      become: true 
+      shell: sed -i.bkp '117c\Server={{ server }}' /etc/zabbix/zabbix_agentd.conf; sudo sed -i.bkp '158c\ServerActive={{ serverActive }}' /etc/zabbix/zabbix_agentd.conf
+    
+    - name: Instalando UFW
+      become: true
+      shell: sudo apt install ufw -y
+    
+    - name: Habilitando UFW
+      become: true
+      shell: sudo ufw enable
+    
+    - name: Stop Zabbix-agent
+      become: true
+      shell: sudo systemctl stop zabbix-agent
+    
+    - name: Start Zabbix-agent
+      become: true
+      shell: sudo systemctl start zabbix-agent
+    
+    - name: Habilitando Zabbix-agent
+      become: true
+      shell: sudo systemctl enable zabbix-agent
+    
+    - name: Liberando porta 10050
+      become: true
+      shell: sudo ufw allow 10050/tcp
+    
+    - name: Reload UFW
+      become: true
+      shell: sudo ufw reload
+    
+    - name: Instalando Pip
+      become: true
+      shell: apt-get install python-pip -y
+    
+    - name: instalando modulo zabbix-ansible
+      shell: pip install zabbix-api
+    
+    - name: Colocando a maquina no monitoramento
+      local_action:
+        module: zabbix_host
+        server_url: "{{ urlserver }}"
+        login_user: "{{ login_user }}"
+        login_password: "{{ login_password }}"
+        host_name: "{{ host_name }}"
+        visible_name: 
+        host_groups: "{{ host_groups[*] }}"
+        link_templates: "{{ link_templates[*] }}"
+        status: enabled
+        interfaces:
+          - type: 1
+            main: 1
+            useip: 1
+            ip: "{{ hip.stdout }}"
+            dns: ""
+            port: 10050
