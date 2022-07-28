@@ -22,9 +22,9 @@
       become: true 
       shell: sed -i.bkp '117c\Server={{ server }}' /etc/zabbix/zabbix_agentd.conf; sudo sed -i.bkp '158c\ServerActive={{ serverActive }}' /etc/zabbix/zabbix_agentd.conf
     
-    - name: Habilitando UFW
-      become: true
-      shell: sudo ufw enable
+    #- name: Habilitando UFW
+    #  become: true
+    #  shell: sudo ufw enable
     
     - name: Stop Zabbix-agent
       become: true
@@ -38,13 +38,13 @@
       become: true
       shell: sudo systemctl enable zabbix-agent
     
-    - name: Liberando porta 10050
-      become: true
-      shell: sudo ufw allow 10050/tcp
+    #- name: Liberando porta 10050
+    #  become: true
+    #  shell: sudo ufw allow 10050/tcp
     
-    - name: Reload UFW
-      become: true
-      shell: sudo ufw reload
+    #- name: Reload UFW
+    #  become: true
+    #  shell: sudo ufw reload
     
     - name: Instalando Pip
       become: true
