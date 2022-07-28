@@ -1,9 +1,9 @@
-server: 172.31.42.59
-serverActive: 172.31.42.59
-urlserver: http://18.191.231.171/zabbix
+server: 172.31.114.108,127.0.0.1,172.31.117.222 #ip-server, localchost, ip_pvt_proxy
+serverActive: 172.31.114.108
+urlserver: http://172.31.114.108/zabbix
 login_user: Admin
 login_password: zabbix
-host_name: Ansible CentOs
+host_name: Ubuntu20Proxy-host
 host_groups: Linux servers
 link_templates: Linux by Zabbix agent
-proxy_name: teste_proxy
+proxy_name: Ubuntu20Proxy
