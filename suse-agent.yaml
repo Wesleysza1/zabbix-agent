@@ -24,10 +24,15 @@
     
     - name: Configurando Agent
       become: true
-      shell: sed -i.bkp '117c\Server={{ server }}' /etc/zabbix/zabbix_agentd.conf; sudo sed -i.bkp '158c\ServerActive={{ serverActive }}' /etc/zabbix/zabbix_agentd.conf
+      shell: sed -i.bkp '117c\Server={{ server }}' /etc/zabbix/zabbix_agentd.conf; sudo sed -i.bkp '170c\ServerActive={{ serverActive }}' /etc/zabbix/zabbix_agentd.conf
+    
+    - name: Configurando Hostname
+      become: true
+      shell: sed -i.bkp '181c\Server={{ host_name }}' /etc/zabbix/zabbix_agentd.conf
     
     - name: Configurando Firewall
       shell: systemctl start firewalld; firewall-cmd --permanent --add-port=10050/tcp; firewall-cmd --reload
+      ignore_errors: yes
     
     - name: Habilitando Zabbix-agent
       become: true

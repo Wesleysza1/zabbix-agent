@@ -1,6 +1,6 @@
-server: 172.31.114.108,127.0.0.1,172.31.117.222 #ip-server, localchost, ip_pvt_proxy
+server: 172.31.114.108
 serverActive: 172.31.114.108
-urlserver: http://172.31.114.108/zabbix
+urlserver: http://3.101.108.160/zabbix
 login_user: Admin
 login_password: zabbix
 host_name: Ubuntu20Proxy-host
