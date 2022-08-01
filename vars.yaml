@@ -1,6 +1,6 @@
 server: 172.31.114.108
 serverActive: 172.31.114.108
-urlserver: http://3.101.108.160/zabbix
+urlserver: http://50.18.146.205/zabbix
 login_user: Admin
 login_password: zabbix
 host_name: Host
