@@ -24,7 +24,7 @@
     
     - name: Configurando Agent
       become: true
-      shell: sed -i.bkp '117c\Server={{ server }}{{ hip.stdout }}' /etc/zabbix/zabbix_agentd.conf; sudo sed -i.bkp '170c\ServerActive={{ serverActive }}' /etc/zabbix/zabbix_agentd.conf
+      shell: sed -i.bkp '117c\Server={{ server }},{{ hip.stdout }}' /etc/zabbix/zabbix_agentd.conf; sudo sed -i.bkp '170c\ServerActive={{ serverActive }}' /etc/zabbix/zabbix_agentd.conf
     
     - name: Configurando Hostname
       become: true
