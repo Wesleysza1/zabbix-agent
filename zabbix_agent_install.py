@@ -2,7 +2,6 @@ import subprocess
 
 system = str(subprocess.check_output("cat /etc/*-release | grep PRETTY", shell=True))
 so = system.lower()
-print(so)
 
 if "ubuntu" in so:
     subprocess.call(["ansible-playbook", "ubuntu-agent.yaml", "-K"])
